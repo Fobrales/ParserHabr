@@ -7,6 +7,8 @@ import json
 
 count = 3;
 #задать количество страниц.
+data = [];
+#массив для хранения данных
 
 for i in range(count):
 	page = i+1
@@ -19,9 +21,7 @@ for i in range(count):
 	except URLError as e:
 		print("The server could not be found!")
 	else:
-		articleList = bs.findAll('div', {'class': ['tm-article-snippet']})
-	
-	data = [];	
+		articleList = bs.findAll('div', {'class': ['tm-article-snippet']})	
 	for art in articleList:
 		header = art.find('a', {'class': 'tm-article-snippet__title-link'})
 		anno = art.find('div', {'class': 'article-formatted-body'})
@@ -36,6 +36,10 @@ for i in range(count):
 			'url': "https://habr.com" + url,
 			'anno': annoText
 		})
+	print("Parsing " + str(page) + " page...");
 
-	with open('data.json', 'w') as outfile:
+with open('data.json', 'w') as outfile:
+	try:
 		json.dump(data, outfile, ensure_ascii=False)
+	except:
+		print("Parsing error on page " + str(page))
